@@ -952,7 +952,7 @@ app.use((error, req, res, next) => {
 // START SERVER
 // ==========================================
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Handoff server running on http://localhost:${PORT}`);
 
   if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
