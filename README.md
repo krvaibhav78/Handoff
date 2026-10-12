@@ -1,19 +1,4 @@
 
-
-<div align="center">
-
-<img src="assets/handoff-banner.png" alt="Handoff — Give Good Things a Second Life" width="100%">
-
-<br>
-
-### ♻️ Give Good Things a Second Life
-
-**A student marketplace for affordable, pre-owned essentials.**
-
-[🌐 Live Demo](https://handoff-five-xi.vercel.app/) · [📂 GitHub Repository](https://github.com/krvaibhav78/Handoff)
-
-</div>
-
 ---# Handoff — Student Marketplace
 
 **A full-stack marketplace that helps students buy and sell pre-owned products.**
