@@ -27,7 +27,7 @@ app.use(express.json({ limit: "20kb" }));
 // CORS: allow local development and deployed Vercel frontend.
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://handoff-five-xl.vercel.app",
+  "https://handoff-five-xi.vercel.app",
   ...(process.env.FRONTEND_URL || "")
     .split(",")
     .map((origin) => origin.trim())
