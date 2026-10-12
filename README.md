@@ -173,4 +173,4 @@ Protected endpoints require a valid bearer token.
 
 ## 📄 License
 
-No license has been specified yet. Add a license file if you decide to permit reuse or redistribution.
+Licensed @krvaibhav78
