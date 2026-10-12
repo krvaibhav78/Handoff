@@ -508,7 +508,6 @@ footer {
     flex-direction: column;
   }
 }
-```css
 /* ==========================================
    HANDOFF — VIBRANT CAMPUS MARKETPLACE THEME
    Append this block to the bottom of App.css
@@ -1260,4 +1259,3 @@ footer {
     animation-duration: 0.01ms !important;
   }
 }
-```
