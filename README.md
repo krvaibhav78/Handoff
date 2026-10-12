@@ -1,5 +1,5 @@
 
----# Handoff — Student Marketplace
+# Handoff — Student Marketplace
 
 **A full-stack marketplace that helps students buy and sell pre-owned products.**
 
