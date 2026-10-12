@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 
 const express = require("express");
@@ -22,43 +21,28 @@ const MAX_DESCRIPTION_LENGTH = 5000;
 // ==========================================
 
 app.disable("x-powered-by");
-
-// Enable this only when your deployment is behind a trusted proxy.
-// Configure the exact proxy environment before enabling it.
-// app.set("trust proxy", 1);
-
 app.use(helmet());
-
 app.use(express.json({ limit: "20kb" }));
 
-// Set FRONTEND_URL in production to your deployed frontend origin.
-// Example: FRONTEND_URL=https://your-frontend.example
+// CORS: allow local development and deployed Vercel frontend.
 const allowedOrigins = [
   "http://localhost:5173",
-  ...(process.env.FRONTEND_URL
-    ? process.env.FRONTEND_URL.split(",")
-        .map((origin) => origin.trim())
-        .filter(Boolean)
-    : []),
+  "https://handoff-five-xl.vercel.app",
+  ...(process.env.FRONTEND_URL || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
 ];
 
 app.use(
   cors({
-    origin(origin, callback) {
-      // Requests without an Origin header can include server-to-server
-      // clients and command-line tools.
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      return callback(new Error("Origin not allowed by CORS"));
-    },
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// Authentication rate limit: 20 requests per 15 minutes per IP.
+// Authentication rate limit.
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 20,
@@ -69,7 +53,7 @@ const authLimiter = rateLimit({
   },
 });
 
-// Message sending rate limit: 60 requests per 15 minutes per IP.
+// Message sending rate limit.
 const messageLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 60,
@@ -529,7 +513,6 @@ app.post("/products", requireAuth, async (req, res) => {
     });
   }
 });
-
 // ==========================================
 // UPDATE PRODUCT (OWNER ONLY)
 // PUT /products/:id
@@ -729,8 +712,10 @@ app.post("/conversations", requireAuth, async (req, res) => {
   }
 });
 
+// ==========================================
+// GET INBOX
 // GET /conversations
-// Get the authenticated user's inbox.
+// ==========================================
 
 app.get("/conversations", requireAuth, async (req, res) => {
   try {
@@ -770,8 +755,10 @@ app.get("/conversations", requireAuth, async (req, res) => {
   }
 });
 
+// ==========================================
+// GET MESSAGES
 // GET /conversations/:id/messages
-// Get messages after checking conversation membership.
+// ==========================================
 
 app.get(
   "/conversations/:id/messages",
@@ -821,8 +808,11 @@ app.get(
   }
 );
 
+// ==========================================
+// SEND MESSAGE
 // POST /conversations/:id/messages
 // Body: { "body": "Hello!" }
+// ==========================================
 
 app.post(
   "/conversations/:id/messages",
@@ -885,8 +875,7 @@ app.post(
 );
 
 // ==========================================
-// DATABASE TEST
-// Disabled in production; requires authentication in development.
+// DATABASE TEST (DEVELOPMENT ONLY)
 // ==========================================
 
 if (process.env.NODE_ENV !== "production") {
@@ -929,12 +918,6 @@ app.use((error, req, res, next) => {
     });
   }
 
-  if (error.message === "Origin not allowed by CORS") {
-    return res.status(403).json({
-      error: "This origin is not allowed.",
-    });
-  }
-
   if (error instanceof SyntaxError && error.status === 400) {
     return res.status(400).json({
       error: "Invalid JSON request body.",
@@ -953,7 +936,7 @@ app.use((error, req, res, next) => {
 // ==========================================
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Handoff server running on http://localhost:${PORT}`);
+  console.log(`Handoff server running on port ${PORT}`);
 
   if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
     console.error(
